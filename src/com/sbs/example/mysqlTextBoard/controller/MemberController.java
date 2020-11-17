@@ -5,7 +5,6 @@ import java.util.Scanner;
 import com.sbs.example.mysqlTextBoard.Container;
 import com.sbs.example.mysqlTextBoard.dto.Member;
 import com.sbs.example.mysqlTextBoard.service.MemberService;
-import com.sbs.example.mysqlTextBoard.session.Session;
 
 public class MemberController extends Controller {
 
@@ -20,7 +19,38 @@ public class MemberController extends Controller {
 			doJoin(cmd);
 		} else if (cmd.startsWith("member login")) {
 			doLogin(cmd);
+		} else if (cmd.startsWith("member logout")) {
+			doLogout(cmd);
+		} else if (cmd.startsWith("member whoami")) {
+			showWhoami(cmd);
 		}
+	}
+
+	private void showWhoami(String cmd) {
+		System.out.println("== 회원확인 ==");
+		if (Container.session.isLogined() == false) {
+			System.out.println("로그인 후 이용해주세요.");
+			return;
+		}
+
+		int loginedMemberId = Container.session.getLoginedMemberId();
+		Member member = memberService.getMemberById(loginedMemberId);
+		System.out.printf("번호 : %d\n", member.id);
+		System.out.printf("가입날자 : %s\n", member.regDate);
+		System.out.printf("로그인아이디 : %s\n", member.loginId);
+		System.out.printf("이름 : %s\n", member.name);
+	}
+
+	private void doLogout(String cmd) {
+		System.out.println("== 로그아웃 ==");
+
+		if (Container.session.isLogined() == false) {
+			System.out.println("로그인 후 이용해주세요.");
+			return;
+		}
+
+		System.out.println("로그아웃 되었습니다.");
+		Container.session.logout();
 	}
 
 	private void doJoin(String cmd) {
@@ -103,9 +133,8 @@ public class MemberController extends Controller {
 			return;
 		}
 
-		Session.loginedMemberId = member.id;
+		Container.session.login(member.id);
 
 		System.out.printf("%s님 환영합니다.\n", member.name);
 	}
-
 }
