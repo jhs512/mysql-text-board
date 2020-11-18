@@ -11,6 +11,8 @@ public class Article {
 	public int memberId;
 	public int boardId;
 
+	public String extra__writer;
+
 	public Article(Map<String, Object> map) {
 		this.id = (int) map.get("id");
 		this.regDate = (String) map.get("regDate");
@@ -19,6 +21,9 @@ public class Article {
 		this.body = (String) map.get("body");
 		this.memberId = (int) map.get("memberId");
 		this.boardId = (int) map.get("boardId");
+		if (map.containsKey("extra__writer")) {
+			this.extra__writer = (String) map.get("extra__writer");
+		}
 	}
 
 	@Override
