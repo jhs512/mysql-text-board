@@ -34,7 +34,7 @@ public class ArticleController extends Controller {
 
 	private void doModify(String cmd) {
 		System.out.println("== 게시물 수정 ==");
-		
+
 		if (Container.session.isLogined() == false) {
 			System.out.println("로그인 후 이용해주세요.");
 			return;
@@ -48,7 +48,12 @@ public class ArticleController extends Controller {
 			System.out.println("존재하지 않는 게시물 입니다.");
 			return;
 		}
-		
+
+		if (article.memberId != Container.session.getLoginedMemberId()) {
+			System.out.println("권한이 없습니다.");
+			return;
+		}
+
 		Member member = memberService.getMemberById(article.memberId);
 		String writer = member.name;
 
@@ -71,7 +76,7 @@ public class ArticleController extends Controller {
 
 	private void doWrite(String cmd) {
 		System.out.println("== 게시물 작성 ==");
-		
+
 		if (Container.session.isLogined() == false) {
 			System.out.println("로그인 후 이용해주세요.");
 			return;
@@ -95,7 +100,7 @@ public class ArticleController extends Controller {
 
 	private void doDelete(String cmd) {
 		System.out.println("== 게시물 삭제 ==");
-		
+
 		if (Container.session.isLogined() == false) {
 			System.out.println("로그인 후 이용해주세요.");
 			return;
@@ -107,6 +112,11 @@ public class ArticleController extends Controller {
 
 		if (article == null) {
 			System.out.println("존재하지 않는 게시물 입니다.");
+			return;
+		}
+
+		if (article.memberId != Container.session.getLoginedMemberId()) {
+			System.out.println("권한이 없습니다.");
 			return;
 		}
 
@@ -140,7 +150,7 @@ public class ArticleController extends Controller {
 			System.out.println("존재하지 않는 게시물 입니다.");
 			return;
 		}
-		
+
 		Member member = memberService.getMemberById(article.memberId);
 		String writer = member.name;
 
