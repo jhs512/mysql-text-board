@@ -25,4 +25,12 @@ public class Member {
 				+ ", loginPw=" + loginPw + ", name=" + name + "]";
 	}
 
+	public String getType() {
+		return isAdmin() ? "관리자" : "일반회원";
+	}
+
+	public boolean isAdmin() {
+		return loginId.equals("test1");
+	}
+
 }

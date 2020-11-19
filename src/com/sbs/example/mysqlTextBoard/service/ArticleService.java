@@ -30,7 +30,7 @@ public class ArticleService {
 	}
 
 	public int modify(int id, String title, String body) {
-		return articleDao.modify(id, title, body);		
+		return articleDao.modify(id, title, body);
 	}
 
 	public List<Article> getForPrintArticles(int boardId) {
@@ -39,6 +39,22 @@ public class ArticleService {
 
 	public Board getBoardByCode(String boardCode) {
 		return articleDao.getBoardByCode(boardCode);
+	}
+
+	public boolean isMakeBoardAvailableName(String name) {
+		Board board = articleDao.getBoardByName(name);
+
+		return board == null;
+	}
+
+	public boolean isMakeBoardAvailableCode(String code) {
+		Board board = articleDao.getBoardByCode(code);
+
+		return board == null;
+	}
+
+	public int makeBoard(String code, String name) {
+		return articleDao.makeBoard(code, name);
 	}
 
 }

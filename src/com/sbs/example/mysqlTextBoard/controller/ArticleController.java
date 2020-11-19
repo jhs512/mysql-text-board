@@ -20,7 +20,9 @@ public class ArticleController extends Controller {
 	}
 
 	public void doCommand(String cmd) {
-		if (cmd.startsWith("article list")) {
+		if (cmd.startsWith("article makeBoard")) {
+			doMakeBoard(cmd);
+		} else if (cmd.startsWith("article list")) {
 			showList(cmd);
 		} else if (cmd.startsWith("article detail ")) {
 			showDetail(cmd);
@@ -31,6 +33,44 @@ public class ArticleController extends Controller {
 		} else if (cmd.startsWith("article write")) {
 			doWrite(cmd);
 		}
+	}
+
+	private void doMakeBoard(String cmd) {
+		System.out.println("== 게시판 작성 ==");
+
+		if (Container.session.isLogined() == false) {
+			System.out.println("로그인 후 이용해주세요.");
+			return;
+		}
+
+		Member member = memberService.getMemberById(Container.session.getLoginedMemberId());
+
+		if (member.isAdmin() == false) {
+			System.out.println("관리자만 게시판을 생성할 수 있습니다.");
+			return;
+		}
+
+		Scanner sc = Container.scanner;
+
+		System.out.printf("이름 : ");
+		String name = sc.nextLine();
+
+		if (articleService.isMakeBoardAvailableName(name) == false) {
+			System.out.println("해당 이름은 이미 사용중입니다.");
+			return;
+		}
+
+		System.out.printf("코드 : ");
+		String code = sc.nextLine();
+
+		if (articleService.isMakeBoardAvailableCode(code) == false) {
+			System.out.println("해당 코드는 이미 사용중입니다.");
+			return;
+		}
+
+		int id = articleService.makeBoard(code, name);
+
+		System.out.printf("%d번 게시판을 생성하였습니다.\n", id);
 	}
 
 	private void doModify(String cmd) {
