@@ -14,7 +14,7 @@ public class App {
 			String cmd = sc.nextLine();
 
 			MysqlUtil.setDBInfo("127.0.0.1", "sbsst", "sbs123414", "textBoard");
-			
+
 			boolean needToExit = false;
 
 			if (cmd.equals("system exit")) {
@@ -40,6 +40,8 @@ public class App {
 			return Container.articleController;
 		} else if (cmd.startsWith("member ")) {
 			return Container.memberController;
+		} else if (cmd.startsWith("build ")) {
+			return Container.buildController;
 		}
 
 		return null;
