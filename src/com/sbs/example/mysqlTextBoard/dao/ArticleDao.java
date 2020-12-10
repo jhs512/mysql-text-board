@@ -169,4 +169,9 @@ public class ArticleDao {
 		return MysqlUtil.selectRowIntValue(sql);
 	}
 
+	public List<Board> getBoards() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
