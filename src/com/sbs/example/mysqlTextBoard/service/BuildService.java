@@ -84,8 +84,8 @@ public class BuildService {
 		int previousPageBoxesCount = (page - 1) / pageBoxSize;
 		int pageBoxStartPage = pageBoxSize * previousPageBoxesCount + 1;
 		int pageBoxEndPage = pageBoxStartPage + pageBoxSize - 1;
-		
-		if ( pageBoxEndPage > totalPage ) {
+
+		if (pageBoxEndPage > totalPage) {
 			pageBoxEndPage = totalPage;
 		}
 
@@ -114,13 +114,13 @@ public class BuildService {
 
 		for (int i = pageBoxStartPage; i <= pageBoxEndPage; i++) {
 			String selectedClass = "";
-			
-			if ( i == page ) {
+
+			if (i == page) {
 				selectedClass = "article-page-menu__link--selected";
 			}
-			
-			pageMenuContent.append("<li><a href=\"" + getArticleListFileName(board, i)
-					+ "\" class=\"flex flex-ai-c " + selectedClass + "\">" + i + "</a></li>");
+
+			pageMenuContent.append("<li><a href=\"" + getArticleListFileName(board, i) + "\" class=\"flex flex-ai-c "
+					+ selectedClass + "\">" + i + "</a></li>");
 		}
 
 		if (pageBoxEndAfterBtnNeedToShow) {
@@ -183,9 +183,10 @@ public class BuildService {
 	}
 
 	private void buildArticleDetailPages() {
-		List<Article> articles = articleService.getArticles();
+		List<Article> articles = articleService.getForPrintArticles();
 
 		String head = getHeadHtml("article_detail");
+		String body = Util.getFileContents("site_template/article_detail.html");
 		String foot = Util.getFileContents("site_template/foot.html");
 
 		// 게시물 상세피이지 생성
@@ -194,15 +195,19 @@ public class BuildService {
 
 			sb.append(head);
 
-			sb.append("번호 : " + article.id + "<br>");
-			sb.append("작성날짜 : " + article.regDate + "<br>");
-			sb.append("갱신날짜 : " + article.updateDate + "<br>");
-			sb.append("제목 : " + article.title + "<br>");
-			sb.append("내용 : " + article.body + "<br>");
-			sb.append("<a href=\"article_detail_" + (article.id - 1) + ".html\">이전글</a><br>");
-			sb.append("<a href=\"article_detail_" + (article.id + 1) + ".html\">다음글</a><br>");
-
-			sb.append("</div>");
+			body = body.replace("${article-detail__title}", article.title);
+			body = body.replace("${article-detail__board-name}", "FREE");
+			body = body.replace("${article-detail__reg-date}", article.regDate);
+			body = body.replace("${article-detail__writer}", article.extra__writer);
+			body = body.replace("${article-detail__body}", article.body);
+			body = body.replace("${article-detail__link-prev-article-url}", "");
+			body = body.replace("${article-detail__link-prev-article-class-addi}", "");
+			body = body.replace("${article-detail__link-list-url}", "");
+			body = body.replace("${article-detail__link-list-class-addi}", "");
+			body = body.replace("${article-detail__link-next-article-url}", "");
+			body = body.replace("${article-detail__link-next-article-class-addi}", "");
+			
+			sb.append(body);
 
 			sb.append(foot);
 

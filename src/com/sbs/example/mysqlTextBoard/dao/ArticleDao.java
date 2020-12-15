@@ -165,13 +165,7 @@ public class ArticleDao {
 		sql.append("SELECT COUNT(*) AS cnt");
 		sql.append("FROM article");
 		sql.append("WHERE boardId = ?", boardId);
-		
+
 		return MysqlUtil.selectRowIntValue(sql);
 	}
-
-	public List<Board> getBoards() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
