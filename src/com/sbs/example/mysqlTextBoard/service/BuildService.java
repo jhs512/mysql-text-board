@@ -29,7 +29,8 @@ public class BuildService {
 		buildArticleDetailPages();
 	}
 
-	private void buildArticleListPage(Board board, int pageBoxMenuSize, List<Article> articles, int page) {
+	private void buildArticleListPage(Board board, int itemsInAPage, int pageBoxMenuSize, List<Article> articles,
+			int page) {
 		StringBuilder sb = new StringBuilder();
 
 		// 헤더 시작
@@ -40,7 +41,17 @@ public class BuildService {
 
 		StringBuilder mainContent = new StringBuilder();
 
-		for (Article article : articles) {
+		int articlesCount = articles.size();
+		int start = (page - 1) * itemsInAPage;
+		int end = start + itemsInAPage - 1;
+
+		if (end >= articlesCount) {
+			end = articlesCount - 1;
+		}
+
+		for (int i = start; i <= end; i++) {
+			Article article = articles.get(i);
+
 			String link = "article_detail_" + article.id + ".html";
 
 			mainContent.append("<div>");
@@ -81,15 +92,16 @@ public class BuildService {
 	private void buildArticleListPages() {
 		List<Board> boards = articleService.getForPrintBoards();
 
+		int itemsInAPage = 10;
 		int pageBoxMenuSize = 10;
 
 		for (Board board : boards) {
 			List<Article> articles = articleService.getForPrintArticles(board.id);
 			int articlesCount = articles.size();
-			int totalPage = (int) Math.ceil((double) articlesCount / pageBoxMenuSize);
+			int totalPage = (int) Math.ceil((double) articlesCount / itemsInAPage);
 
 			for (int i = 1; i <= totalPage; i++) {
-				buildArticleListPage(board, pageBoxMenuSize, articles, i);
+				buildArticleListPage(board, itemsInAPage, pageBoxMenuSize, articles, i);
 			}
 		}
 	}
