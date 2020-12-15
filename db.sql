@@ -91,3 +91,24 @@ UPDATE article
 SET boardId = 2
 LIMIT 2;
 
+SELECT * FROM article;
+
+SELECT DATE(NOW());
+SELECT YEAR(NOW());
+SELECT MONTH(NOW());
+SELECT DAY(NOW());
+SELECT SUBSTR("안녕하세요.", 1, 2);
+SELECT SUBSTR("안녕하세요.", 2, 2);
+SELECT CONCAT("안녕", "하세요.");
+SELECT RAND() * 100;
+
+# 게시물 랜덤 생성
+/*
+insert into article
+set regDate = NOW(),
+updateDate = NOW(),
+title = concat("제목_", rand()),
+`body` = CONCAT("내용_", RAND()),
+memberId = FLOOR(RAND() * 2) + 1,
+boardId = FLOOR(RAND() * 1) + 1;
+*/
