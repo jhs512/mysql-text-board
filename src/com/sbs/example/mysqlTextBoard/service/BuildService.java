@@ -147,7 +147,7 @@ public class BuildService {
 	private String getArticleListFileName(Board board, int page) {
 		return getArticleListFileName(board.code, page);
 	}
-	
+
 	private String getArticleListFileName(String boardCode, int page) {
 		return "article_list_" + boardCode + "_" + page + ".html";
 	}
@@ -187,40 +187,68 @@ public class BuildService {
 	}
 
 	private void buildArticleDetailPages() {
-		List<Article> articles = articleService.getForPrintArticles();
+		List<Board> boards = articleService.getForPrintBoards();
 
 		String head = getHeadHtml("article_detail");
-		String body = Util.getFileContents("site_template/article_detail.html");
+		String bodyTemplate = Util.getFileContents("site_template/article_detail.html");
 		String foot = Util.getFileContents("site_template/foot.html");
 
-		// 게시물 상세피이지 생성
-		for (Article article : articles) {
-			StringBuilder sb = new StringBuilder();
+		for (Board board : boards) {
+			List<Article> articles = articleService.getForPrintArticles(board.id);
 
-			sb.append(head);
-			
-			body = body.replace("${article-detail__title}", article.title);
-			body = body.replace("${article-detail__board-name}", article.extra__boardName);
-			body = body.replace("${article-detail__reg-date}", article.regDate);
-			body = body.replace("${article-detail__writer}", article.extra__writer);
-			body = body.replace("${article-detail__body}", article.body);
-			body = body.replace("${article-detail__link-prev-article-url}", "");
-			body = body.replace("${article-detail__link-prev-article-class-addi}", "");
-			body = body.replace("${article-detail__link-list-url}", getArticleListFileName(article.extra__boardCode, 1));
-			body = body.replace("${article-detail__link-list-class-addi}", "");
-			body = body.replace("${article-detail__link-next-article-url}", "");
-			body = body.replace("${article-detail__link-next-article-class-addi}", "");
-			
-			sb.append(body);
+			// 5
+			// i : 0 ~ 4
+			// 0, 1, 2, 3, 4
+			for (int i = 0; i < articles.size(); i++) {
+				Article article = articles.get(i);
+				Article prevArticle = null;
+				int prevArticleIndex = i + 1;
+				int prevArticleId = 0;
+				
+				if ( prevArticleIndex < articles.size() ) {
+					prevArticle = articles.get(prevArticleIndex);
+					prevArticleId = prevArticle.id;
+				}
+				
+				Article nextArticle = null;
+				int nextArticleIndex = i - 1;
+				int nextArticleId = 0;
+				
+				if ( nextArticleIndex >= 0 ) {
+					nextArticle = articles.get(nextArticleIndex);
+					nextArticleId = nextArticle.id;
+				}
 
-			sb.append(foot);
+				StringBuilder sb = new StringBuilder();
 
-			String fileName = getArticleDetailFileName(article.id);
+				sb.append(head);
 
-			String filePath = "site/" + fileName;
+				String body = bodyTemplate.replace("${article-detail__title}", article.title);
+				body = body.replace("${article-detail__board-name}", article.extra__boardName);
+				body = body.replace("${article-detail__reg-date}", article.regDate);
+				body = body.replace("${article-detail__writer}", article.extra__writer);
+				body = body.replace("${article-detail__body}", article.body);
+				body = body.replace("${article-detail__link-prev-article-url}", getArticleDetailFileName(prevArticleId));
+				body = body.replace("${article-detail__link-prev-article-title-attr}", prevArticle != null ? prevArticle.title : "");
+				body = body.replace("${article-detail__link-prev-article-class-addi}", prevArticleId == 0 ? "none" : "");
+				body = body.replace("${article-detail__link-list-url}",
+						getArticleListFileName(article.extra__boardCode, 1));
+				body = body.replace("${article-detail__link-list-class-addi}", "");
+				body = body.replace("${article-detail__link-next-article-url}", getArticleDetailFileName(nextArticleId));
+				body = body.replace("${article-detail__link-next-article-title-attr}", nextArticle != null ? nextArticle.title : "");
+				body = body.replace("${article-detail__link-next-article-class-addi}", nextArticleId == 0 ? "none" : "");
 
-			Util.writeFile(filePath, sb.toString());
-			System.out.println(filePath + " 생성");
+				sb.append(body);
+
+				sb.append(foot);
+
+				String fileName = getArticleDetailFileName(article.id);
+
+				String filePath = "site/" + fileName;
+
+				Util.writeFile(filePath, sb.toString());
+				System.out.println(filePath + " 생성");
+			}
 		}
 	}
 
