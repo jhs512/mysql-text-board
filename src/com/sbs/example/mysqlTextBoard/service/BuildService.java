@@ -52,7 +52,7 @@ public class BuildService {
 		for (int i = start; i <= end; i++) {
 			Article article = articles.get(i);
 
-			String link = "article_detail_" + article.id + ".html";
+			String link = getArticleDetailFileName(article.id);
 
 			mainContent.append("<div>");
 			mainContent.append("<div class=\"article-list__cell-id\">" + article.id + "</div>");
@@ -145,7 +145,11 @@ public class BuildService {
 	}
 
 	private String getArticleListFileName(Board board, int page) {
-		return "article_list_" + board.code + "_" + page + ".html";
+		return getArticleListFileName(board.code, page);
+	}
+	
+	private String getArticleListFileName(String boardCode, int page) {
+		return "article_list_" + boardCode + "_" + page + ".html";
 	}
 
 	private void buildArticleListPages() {
@@ -194,15 +198,15 @@ public class BuildService {
 			StringBuilder sb = new StringBuilder();
 
 			sb.append(head);
-
+			
 			body = body.replace("${article-detail__title}", article.title);
-			body = body.replace("${article-detail__board-name}", "FREE");
+			body = body.replace("${article-detail__board-name}", article.extra__boardName);
 			body = body.replace("${article-detail__reg-date}", article.regDate);
 			body = body.replace("${article-detail__writer}", article.extra__writer);
 			body = body.replace("${article-detail__body}", article.body);
 			body = body.replace("${article-detail__link-prev-article-url}", "");
 			body = body.replace("${article-detail__link-prev-article-class-addi}", "");
-			body = body.replace("${article-detail__link-list-url}", "");
+			body = body.replace("${article-detail__link-list-url}", getArticleListFileName(article.extra__boardCode, 1));
 			body = body.replace("${article-detail__link-list-class-addi}", "");
 			body = body.replace("${article-detail__link-next-article-url}", "");
 			body = body.replace("${article-detail__link-next-article-class-addi}", "");
@@ -211,13 +215,17 @@ public class BuildService {
 
 			sb.append(foot);
 
-			String fileName = "article_detail_" + article.id + ".html";
+			String fileName = getArticleDetailFileName(article.id);
 
 			String filePath = "site/" + fileName;
 
 			Util.writeFile(filePath, sb.toString());
 			System.out.println(filePath + " 생성");
 		}
+	}
+
+	private String getArticleDetailFileName(int id) {
+		return "article_detail_" + id + ".html";
 	}
 
 	private String getHeadHtml(String pageName) {
