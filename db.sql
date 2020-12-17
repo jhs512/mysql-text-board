@@ -119,3 +119,7 @@ UPDATE article SET `body` = '# 공지사항\r\n안녕하세요.\r\n이 사이트
 WHERE id = '3';
 
 SELECT * FROM article;
+
+# 2번글 내용에 자바소스코드 넣기
+UPDATE article SET `body` = '# 자바기본문법\r\n```java\r\nint a = 10;\r\nint b = 20;\r\nint c = a + b;\r\n```'
+WHERE id = '2'; 
