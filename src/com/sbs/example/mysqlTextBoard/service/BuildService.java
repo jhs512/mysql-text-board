@@ -21,6 +21,8 @@ public class BuildService {
 		System.out.println("site/article 폴더 생성");
 		Util.mkdirs("site");
 
+		Util.copyDir("site_template/img", "site/img");
+
 		Util.copy("site_template/favicon.ico", "site/favicon.ico");
 		Util.copy("site_template/app.css", "site/app.css");
 		Util.copy("site_template/app.js", "site/app.js");
@@ -201,23 +203,23 @@ public class BuildService {
 			// 0, 1, 2, 3, 4
 			for (int i = 0; i < articles.size(); i++) {
 				Article article = articles.get(i);
-				
+
 				String head = getHeadHtml("article_detail", article);
-				
+
 				Article prevArticle = null;
 				int prevArticleIndex = i + 1;
 				int prevArticleId = 0;
-				
-				if ( prevArticleIndex < articles.size() ) {
+
+				if (prevArticleIndex < articles.size()) {
 					prevArticle = articles.get(prevArticleIndex);
 					prevArticleId = prevArticle.id;
 				}
-				
+
 				Article nextArticle = null;
 				int nextArticleIndex = i - 1;
 				int nextArticleId = 0;
-				
-				if ( nextArticleIndex >= 0 ) {
+
+				if (nextArticleIndex >= 0) {
 					nextArticle = articles.get(nextArticleIndex);
 					nextArticleId = nextArticle.id;
 				}
@@ -225,7 +227,7 @@ public class BuildService {
 				StringBuilder sb = new StringBuilder();
 
 				sb.append(head);
-				
+
 				String articleBodyForPrint = article.body;
 				articleBodyForPrint = articleBodyForPrint.replaceAll("script", "<!--REPLACE:script-->");
 
@@ -234,15 +236,21 @@ public class BuildService {
 				body = body.replace("${article-detail__reg-date}", article.regDate);
 				body = body.replace("${article-detail__writer}", article.extra__writer);
 				body = body.replace("${article-detail__body}", articleBodyForPrint);
-				body = body.replace("${article-detail__link-prev-article-url}", getArticleDetailFileName(prevArticleId));
-				body = body.replace("${article-detail__link-prev-article-title-attr}", prevArticle != null ? prevArticle.title : "");
-				body = body.replace("${article-detail__link-prev-article-class-addi}", prevArticleId == 0 ? "none" : "");
+				body = body.replace("${article-detail__link-prev-article-url}",
+						getArticleDetailFileName(prevArticleId));
+				body = body.replace("${article-detail__link-prev-article-title-attr}",
+						prevArticle != null ? prevArticle.title : "");
+				body = body.replace("${article-detail__link-prev-article-class-addi}",
+						prevArticleId == 0 ? "none" : "");
 				body = body.replace("${article-detail__link-list-url}",
 						getArticleListFileName(article.extra__boardCode, 1));
 				body = body.replace("${article-detail__link-list-class-addi}", "");
-				body = body.replace("${article-detail__link-next-article-url}", getArticleDetailFileName(nextArticleId));
-				body = body.replace("${article-detail__link-next-article-title-attr}", nextArticle != null ? nextArticle.title : "");
-				body = body.replace("${article-detail__link-next-article-class-addi}", nextArticleId == 0 ? "none" : "");
+				body = body.replace("${article-detail__link-next-article-url}",
+						getArticleDetailFileName(nextArticleId));
+				body = body.replace("${article-detail__link-next-article-title-attr}",
+						nextArticle != null ? nextArticle.title : "");
+				body = body.replace("${article-detail__link-next-article-class-addi}",
+						nextArticleId == 0 ? "none" : "");
 
 				sb.append(body);
 
@@ -261,7 +269,7 @@ public class BuildService {
 	private String getArticleDetailFileName(int id) {
 		return "article_detail_" + id + ".html";
 	}
-	
+
 	private String getHeadHtml(String pageName) {
 		return getHeadHtml(pageName, null);
 	}
@@ -293,33 +301,50 @@ public class BuildService {
 		head = head.replace("${title-bar__content}", titleBarContentHtml);
 
 		String pageTitle = getPageTitle(pageName, relObj);
-		
+
 		head = head.replace("${page-title}", pageTitle);
+
+		String siteName = "Developers";
+		String siteSubject = "개발자의 기술/일상 블로그";
+		String siteDescription = "개발자의 기술/일상 관련 글들을 공유합니다.";
+		String siteKeywords = "HTML, CSS, JAVASCRIPT, JAVA, SPRING, MySQL, 리눅스, 리액트";
+		String siteDomain = "ssg-2020-12.oa.gg";
+		String siteMainUrl = "https://" + siteDomain;
+		String currentDate = Util.getNowDateStr().replace(" ", "T");
+
+		head = head.replace("${site-name}", siteName);
+		head = head.replace("${site-subject}", siteSubject);
+		head = head.replace("${site-description}", siteDescription);
+		head = head.replace("${site-domain}", siteDomain);
+		head = head.replace("${site-domain}", siteDomain);
+		head = head.replace("${current-date}", currentDate);
+		head = head.replace("${site-main-url}", siteMainUrl);
+		head = head.replace("${site-keywords}", siteKeywords);
 
 		return head;
 	}
 
 	private String getPageTitle(String pageName, Object relObj) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		String forPrintPageName = pageName;
-		
-		if ( forPrintPageName.equals("index") ) {
+
+		if (forPrintPageName.equals("index")) {
 			forPrintPageName = "home";
 		}
-		
+
 		forPrintPageName = forPrintPageName.toUpperCase();
 		forPrintPageName = forPrintPageName.replaceAll("_", " ");
-		
+
 		sb.append("Developers | ");
 		sb.append(forPrintPageName);
-		
-		if ( relObj instanceof Article ) {
+
+		if (relObj instanceof Article) {
 			Article article = (Article) relObj;
-			
+
 			sb.insert(0, article.title + " | ");
 		}
-		
+
 		return sb.toString();
 	}
 
