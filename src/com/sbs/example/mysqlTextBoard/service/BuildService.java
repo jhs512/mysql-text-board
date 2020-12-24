@@ -198,9 +198,6 @@ public class BuildService {
 		for (Board board : boards) {
 			List<Article> articles = articleService.getForPrintArticles(board.id);
 
-			// 5
-			// i : 0 ~ 4
-			// 0, 1, 2, 3, 4
 			for (int i = 0; i < articles.size(); i++) {
 				Article article = articles.get(i);
 
@@ -251,6 +248,9 @@ public class BuildService {
 						nextArticle != null ? nextArticle.title : "");
 				body = body.replace("${article-detail__link-next-article-class-addi}",
 						nextArticleId == 0 ? "none" : "");
+				
+				body = body.replace("${site-domain}", "ssg-2020-12.oa.gg");
+				body = body.replace("${file-name}", getArticleDetailFileName(article.id));
 
 				sb.append(body);
 
