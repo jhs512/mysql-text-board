@@ -1,18 +1,16 @@
 package com.sbs.example.mysqlTextBoard;
 
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sbs.example.mysqlTextBoard.test.TestRunner;
 import com.sbs.example.mysqlTextBoard.util.Util;
 
 public class Main {
 	public static void main(String[] args) {
-		testApi();
-
+		new TestRunner().run();
 		// new App().run();
-	}
-
-	private static void testApi() {
-		String url = "https://disqus.com/api/3.0/forums/listThreads.json";
-		String rs = Util.callApi(url, "api_key=GuZRzNgkWLxFPfkg6E0SqICbejq8PimfgTMdFVfWYYedfhmI6kz6g5q1ZmbVAMMW",
-				"forum=my-ssg", "thread:ident=article_detail_2.html");
-		System.out.println(rs);
 	}
 }
