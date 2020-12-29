@@ -61,7 +61,7 @@ public class ArticleController extends Controller {
 			System.out.println("코드를 잘 못 입력하였습니다.");
 			return;
 		}
-		
+
 		Container.session.setCurrentBoardCode(board.code);
 
 		System.out.printf("%s 게시판으로 변경합니다.\n", board.name);
@@ -144,7 +144,7 @@ public class ArticleController extends Controller {
 
 		articleService.modify(inputedId, title, body);
 
-		System.out.printf("%d번 게시물을 생성하였습니다.\n", inputedId);
+		System.out.printf("%d번 게시물을 수정하였습니다.\n", inputedId);
 	}
 
 	private void doWrite(String cmd) {

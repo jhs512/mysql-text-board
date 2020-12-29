@@ -1,6 +1,8 @@
 package com.sbs.example.mysqlTextBoard.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sbs.example.mysqlTextBoard.Container;
 import com.sbs.example.mysqlTextBoard.dto.Article;
@@ -10,11 +12,11 @@ import com.sbs.example.mysqlTextBoard.util.Util;
 public class BuildService {
 
 	private ArticleService articleService;
-	private MemberService memberService;
+	private DisqusApiService disqusApiService;
 
 	public BuildService() {
 		articleService = Container.articleService;
-		memberService = Container.memberService;
+		disqusApiService = Container.disqusApiService;
 	}
 
 	public void buildSite() {
@@ -27,9 +29,31 @@ public class BuildService {
 		Util.copy("site_template/app.css", "site/app.css");
 		Util.copy("site_template/app.js", "site/app.js");
 
+		loadDisqusData();
+
 		buildIndexPage();
 		buildArticleListPages();
 		buildArticleDetailPages();
+	}
+
+	private void loadDisqusData() {
+		List<Article> articles = articleService.getForPrintArticles();
+
+		for (Article article : articles) {
+			Map<String, Object> disqusArticleData = disqusApiService.getArticleData(article);
+
+			if (disqusArticleData != null) {
+				int likesCount = (int) disqusArticleData.get("likesCount");
+				int commentsCount = (int) disqusArticleData.get("commentsCount");
+
+				Map<String, Object> modifyArgs = new HashMap<>();
+				modifyArgs.put("id", article.id);
+				modifyArgs.put("likesCount", likesCount);
+				modifyArgs.put("commentsCount", commentsCount);
+
+				articleService.modify(modifyArgs);
+			}
+		}
 	}
 
 	private void buildArticleListPage(Board board, int itemsInAPage, int pageBoxSize, List<Article> articles,
@@ -232,6 +256,10 @@ public class BuildService {
 				body = body.replace("${article-detail__board-name}", article.extra__boardName);
 				body = body.replace("${article-detail__reg-date}", article.regDate);
 				body = body.replace("${article-detail__writer}", article.extra__writer);
+
+				body = body.replace("${article-detail__likes-count}", article.likesCount + "");
+				body = body.replace("${article-detail__comments-count}", article.commentsCount + "");
+
 				body = body.replace("${article-detail__body}", articleBodyForPrint);
 				body = body.replace("${article-detail__link-prev-article-url}",
 						getArticleDetailFileName(prevArticleId));
@@ -248,7 +276,7 @@ public class BuildService {
 						nextArticle != null ? nextArticle.title : "");
 				body = body.replace("${article-detail__link-next-article-class-addi}",
 						nextArticleId == 0 ? "none" : "");
-				
+
 				body = body.replace("${site-domain}", "ssg-2020-12.oa.gg");
 				body = body.replace("${file-name}", getArticleDetailFileName(article.id));
 
@@ -266,7 +294,7 @@ public class BuildService {
 		}
 	}
 
-	private String getArticleDetailFileName(int id) {
+	public String getArticleDetailFileName(int id) {
 		return "article_detail_" + id + ".html";
 	}
 
@@ -304,16 +332,16 @@ public class BuildService {
 
 		head = head.replace("${page-title}", pageTitle);
 
-		String siteName = "Developers";
+		String siteName = Container.config.getSiteName();
 		String siteSubject = "개발자의 기술/일상 블로그";
 		String siteDescription = "개발자의 기술/일상 관련 글들을 공유합니다.";
 		String siteKeywords = "HTML, CSS, JAVASCRIPT, JAVA, SPRING, MySQL, 리눅스, 리액트";
 		String siteDomain = "ssg-2020-12.oa.gg";
 		String siteMainUrl = "https://" + siteDomain;
 		String currentDate = Util.getNowDateStr().replace(" ", "T");
-		
-		if ( relObj instanceof Article ) {
-			Article article = (Article)relObj;
+
+		if (relObj instanceof Article) {
+			Article article = (Article) relObj;
 			siteSubject = article.title;
 			siteDescription = article.body;
 			siteDescription = siteDescription.replaceAll("[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]", "");
@@ -343,7 +371,7 @@ public class BuildService {
 		forPrintPageName = forPrintPageName.toUpperCase();
 		forPrintPageName = forPrintPageName.replaceAll("_", " ");
 
-		sb.append("Developers | ");
+		sb.append(Container.config.getSiteName() + " | ");
 		sb.append(forPrintPageName);
 
 		if (relObj instanceof Article) {

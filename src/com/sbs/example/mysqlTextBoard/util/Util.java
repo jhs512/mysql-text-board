@@ -21,7 +21,6 @@ import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sbs.example.mysqlTextBoard.apidto.DisqusApiDataListThread;
 
 public class Util {
 	public static void mkdirs(String path) {
