@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sbs.example.mysqlTextBoard.apidto.DisqusApiDataListThread;
 import com.sbs.example.mysqlTextBoard.util.Util;
 
 public class TestRunner {
@@ -18,7 +19,7 @@ public class TestRunner {
 	}
 
 	public void run() {
-		testJackson5();
+		testApi3();
 	}
 
 	private void testJackson() {
@@ -107,5 +108,23 @@ public class TestRunner {
 		String rs = Util.callApi(url, "api_key=GuZRzNgkWLxFPfkg6E0SqICbejq8PimfgTMdFVfWYYedfhmI6kz6g5q1ZmbVAMMW",
 				"forum=my-ssg", "thread:ident=article_detail_2.html");
 		System.out.println(rs);
+	}
+
+	private void testApi2() {
+		String url = "https://disqus.com/api/3.0/forums/listThreads.json";
+		Map<String, Object> rs = Util.callApiResponseToMap(url,
+				"api_key=GuZRzNgkWLxFPfkg6E0SqICbejq8PimfgTMdFVfWYYedfhmI6kz6g5q1ZmbVAMMW", "forum=my-ssg",
+				"thread:ident=article_detail_2.html");
+		List<Map<String, Object>> response = (List<Map<String, Object>>) rs.get("response");
+		Map<String, Object> thread = response.get(0);
+		System.out.println((int) thread.get("likes"));
+	}
+
+	private void testApi3() {
+		String url = "https://disqus.com/api/3.0/forums/listThreads.json";
+		DisqusApiDataListThread rs = (DisqusApiDataListThread) Util.callApiResponseTo(DisqusApiDataListThread.class,
+				url, "api_key=GuZRzNgkWLxFPfkg6E0SqICbejq8PimfgTMdFVfWYYedfhmI6kz6g5q1ZmbVAMMW", "forum=my-ssg",
+				"thread:ident=article_detail_2.html");
+		System.out.println(rs.response.get(0).likes + rs.response.get(0).posts);
 	}
 }
