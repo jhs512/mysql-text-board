@@ -14,4 +14,8 @@ public class AppConfig {
 		return "my-ssg";
 	}
 
+	public String getGa4PropertyId() {
+		return "256577988";
+	}
+
 }
