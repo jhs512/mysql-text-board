@@ -3,20 +3,20 @@ package com.sbs.example.mysqlTextBoard.dto;
 import java.util.Map;
 
 public class Article {
-	public int id;
-	public String regDate;
-	public String updateDate;
-	public String title;
-	public String body;
-	public int memberId;
-	public int boardId;
-	public int likesCount;
-	public int commentsCount;
-	public int hitCount;
+	private int id;
+	private String regDate;
+	private String updateDate;
+	private String title;
+	private String body;
+	private int memberId;
+	private int boardId;
+	private int likesCount;
+	private int commentsCount;
+	private int hitCount;
 
-	public String extra__writer;
-	public String extra__boardName;
-	public String extra__boardCode;
+	private String extra__writer;
+	private String extra__boardName;
+	private String extra__boardCode;
 
 	public Article(Map<String, Object> map) {
 		this.id = (int) map.get("id");
@@ -47,6 +47,110 @@ public class Article {
 	public String toString() {
 		return "Article [id=" + id + ", regDate=" + regDate + ", updateDate=" + updateDate + ", title=" + title + ", body=" + body + ", memberId=" + memberId + ", boardId=" + boardId + ", likesCount=" + likesCount + ", commentsCount=" + commentsCount
 				+ ", hitCount=" + hitCount + ", extra__writer=" + extra__writer + ", extra__boardName=" + extra__boardName + ", extra__boardCode=" + extra__boardCode + "]";
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+
+	public String getUpdateDate() {
+		return updateDate;
+	}
+
+	public void setUpdateDate(String updateDate) {
+		this.updateDate = updateDate;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getBody() {
+		return body;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	public int getMemberId() {
+		return memberId;
+	}
+
+	public void setMemberId(int memberId) {
+		this.memberId = memberId;
+	}
+
+	public int getBoardId() {
+		return boardId;
+	}
+
+	public void setBoardId(int boardId) {
+		this.boardId = boardId;
+	}
+
+	public int getLikesCount() {
+		return likesCount;
+	}
+
+	public void setLikesCount(int likesCount) {
+		this.likesCount = likesCount;
+	}
+
+	public int getCommentsCount() {
+		return commentsCount;
+	}
+
+	public void setCommentsCount(int commentsCount) {
+		this.commentsCount = commentsCount;
+	}
+
+	public int getHitCount() {
+		return hitCount;
+	}
+
+	public void setHitCount(int hitCount) {
+		this.hitCount = hitCount;
+	}
+
+	public String getExtra__writer() {
+		return extra__writer;
+	}
+
+	public void setExtra__writer(String extra__writer) {
+		this.extra__writer = extra__writer;
+	}
+
+	public String getExtra__boardName() {
+		return extra__boardName;
+	}
+
+	public void setExtra__boardName(String extra__boardName) {
+		this.extra__boardName = extra__boardName;
+	}
+
+	public String getExtra__boardCode() {
+		return extra__boardCode;
+	}
+
+	public void setExtra__boardCode(String extra__boardCode) {
+		this.extra__boardCode = extra__boardCode;
 	}
 
 }
