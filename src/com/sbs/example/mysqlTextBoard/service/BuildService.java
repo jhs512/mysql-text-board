@@ -259,7 +259,7 @@ public class BuildService {
 				sb.append(head);
 
 				String articleBodyForPrint = article.body;
-				articleBodyForPrint = articleBodyForPrint.replaceAll("script", "<!--REPLACE:script-->");
+				articleBodyForPrint = articleBodyForPrint.replaceAll("script", "t-script");
 
 				String body = bodyTemplate.replace("${article-detail__title}", article.title);
 				body = body.replace("${article-detail__board-name}", article.extra__boardName);
