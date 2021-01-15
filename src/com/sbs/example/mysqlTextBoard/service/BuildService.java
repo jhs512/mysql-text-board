@@ -39,8 +39,8 @@ public class BuildService {
 		buildArticleDetailPages();
 	}
 
-	private void buildArticleTagPage() {
-		Map<String, List<Tag>> articlesByTagMap = articleService.getArticlesByTagMap();
+	public void buildArticleTagPage() {
+		Map<String, List<Article>> articlesByTagMap = Container.articleService.getArticlesByTagMap();
 		
 		String jsonText = Util.getJsonText(articlesByTagMap);
 		Util.writeFile("site/article_tag.json", jsonText);

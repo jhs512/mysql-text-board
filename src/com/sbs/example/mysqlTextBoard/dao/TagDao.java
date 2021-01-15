@@ -4,25 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.sbs.example.mysqlTextBoard.dto.Article;
 import com.sbs.example.mysqlTextBoard.dto.Tag;
 import com.sbs.example.mysqlutil.MysqlUtil;
 import com.sbs.example.mysqlutil.SecSql;
 
 public class TagDao {
 
-	public List<Tag> getTagsByRelTypeCode(String relTypeCode) {
+	// 현재는 안쓰임
+	public List<Tag> getDedupTagsByRelTypeCode(String relTypeCode) {
 		List<Tag> tags = new ArrayList<>();
 
 		SecSql sql = new SecSql();
 		sql.append("SELECT T.*");
 		sql.append("FROM tag AS T");
 		sql.append("WHERE 1");
-		
+
 		if (relTypeCode != null && relTypeCode.length() > 0) {
 			sql.append("AND T.relTypeCode = ?", relTypeCode);
 		}
-		
+
+		sql.append("GROUP BY T.body");
+
 		sql.append("ORDER BY T.body ASC");
 
 		List<Map<String, Object>> list = MysqlUtil.selectRows(sql);
@@ -32,6 +34,31 @@ public class TagDao {
 		}
 
 		return tags;
+	}
+
+	public List<String> getDedupTagBodiesByRelTypeCode(String relTypeCode) {
+		List<String> tagBodies = new ArrayList<>();
+
+		SecSql sql = new SecSql();
+		sql.append("SELECT T.body");
+		sql.append("FROM tag AS T");
+		sql.append("WHERE 1");
+
+		if (relTypeCode != null && relTypeCode.length() > 0) {
+			sql.append("AND T.relTypeCode = ?", relTypeCode);
+		}
+
+		sql.append("GROUP BY T.body");
+
+		sql.append("ORDER BY T.body ASC");
+
+		List<Map<String, Object>> list = MysqlUtil.selectRows(sql);
+
+		for (Map<String, Object> map : list) {
+			tagBodies.add((String) map.get("body"));
+		}
+
+		return tagBodies;
 	}
 
 }

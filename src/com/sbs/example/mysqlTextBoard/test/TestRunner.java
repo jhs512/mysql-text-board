@@ -32,7 +32,11 @@ public class TestRunner {
 	public void run() {
 		MysqlUtil.setDBInfo(Container.config.getDbHost(), Container.config.getDbId(), Container.config.getDbPw(), Container.config.getDbName());
 		
-		testUpdatePageHitsByGa4Api();
+		testMakeArticleTagJsonFile();
+	}
+
+	private void testMakeArticleTagJsonFile() {
+		Container.buildService.buildArticleTagPage();
 	}
 
 	private void testUpdatePageHitsByGa4Api() {
