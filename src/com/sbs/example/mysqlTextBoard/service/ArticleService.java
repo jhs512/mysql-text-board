@@ -4,15 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sbs.example.mysqlTextBoard.Container;
 import com.sbs.example.mysqlTextBoard.dao.ArticleDao;
 import com.sbs.example.mysqlTextBoard.dto.Article;
 import com.sbs.example.mysqlTextBoard.dto.Board;
+import com.sbs.example.mysqlTextBoard.dto.Tag;
 
 public class ArticleService {
 	private ArticleDao articleDao;
+	private TagService tagService;
 
 	public ArticleService() {
 		articleDao = new ArticleDao();
+		tagService = Container.tagService;
 	}
 
 	public List<Article> getArticles() {
@@ -82,5 +86,13 @@ public class ArticleService {
 
 	public void updatePageHits() {
 		articleDao.updatePageHits();
+	}
+
+	public Map<String, List<Tag>> getArticlesByTagMap() {
+		List<Tag> tags = tagService.getTagsByRelTypeCode("article");
+		
+		System.out.println(tags);
+		
+		return null;
 	}
 }

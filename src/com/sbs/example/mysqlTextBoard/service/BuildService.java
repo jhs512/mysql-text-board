@@ -1,12 +1,12 @@
 package com.sbs.example.mysqlTextBoard.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.sbs.example.mysqlTextBoard.Container;
 import com.sbs.example.mysqlTextBoard.dto.Article;
 import com.sbs.example.mysqlTextBoard.dto.Board;
+import com.sbs.example.mysqlTextBoard.dto.Tag;
 import com.sbs.example.mysqlTextBoard.util.Util;
 
 public class BuildService {
@@ -33,9 +33,17 @@ public class BuildService {
 		loadDataFromGa4Data();
 
 		buildIndexPage();
+		buildArticleTagPage();
 		buildArticleSearchPage();
 		buildArticleListPages();
 		buildArticleDetailPages();
+	}
+
+	private void buildArticleTagPage() {
+		Map<String, List<Tag>> articlesByTagMap = articleService.getArticlesByTagMap();
+		
+		String jsonText = Util.getJsonText(articlesByTagMap);
+		Util.writeFile("site/article_tag.json", jsonText);
 	}
 
 	private void buildArticleSearchPage() {
