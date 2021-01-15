@@ -293,4 +293,4 @@ FROM article AS A
 LEFT JOIN tag AS T
 ON A.id = T.relId
 AND T.relTypeCode = 'article'
-GROUP BY A.id
+GROUP BY A.id;
